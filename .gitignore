@@ -16,6 +16,7 @@
 *.files
 */src
 */pkg/
+wine-tkg-git/wine-staging-mirror-git/
 wine-tkg-git/wine-staging-git/
 wine-tkg-git/wine-staging-mirror-git/
 wine-tkg-git/wine-git/
