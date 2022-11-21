@@ -18,7 +18,7 @@
 
 ## You're on your own to resolve additional dependencies you might want to build with, such as Faudio.
 
-pkgname=wine-tkg
+pkgname=wine-tkg-nightmare
 
 # I love English
 # export PATH="/data/Storage/Apps/Linux/mingw-w64/llvm-mingw-20220906-ucrt-ubuntu-18.04-x86_64/bin/:$PATH"
