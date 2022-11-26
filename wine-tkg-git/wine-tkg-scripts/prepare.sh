@@ -62,6 +62,7 @@ _exit_cleanup() {
     echo "_NUKR='${_NUKR}'" >> "$_proton_tkg_path"/proton_tkg_token
     echo "_winesrcdir='${_winesrcdir}'" >> "$_proton_tkg_path"/proton_tkg_token
     echo "_standard_dlopen='${_standard_dlopen}'" >> "$_proton_tkg_path"/proton_tkg_token
+    echo "_processinfoclass='${_processinfoclass}'" >> "$_proton_tkg_path"/proton_tkg_token
     echo "_no_loader_array='${_no_loader_array}'" >> "$_proton_tkg_path"/proton_tkg_token
     echo "CUSTOM_MINGW_PATH='${CUSTOM_MINGW_PATH}'" >> "$_proton_tkg_path"/proton_tkg_token
     echo "CUSTOM_GCC_PATH='${CUSTOM_GCC_PATH}'" >> "$_proton_tkg_path"/proton_tkg_token
@@ -998,6 +999,10 @@ _prepare() {
 	  _standard_dlopen="false"
 	fi
 
+	if [[ "$_custom_wine_source" != *"ValveSoftware"* ]] && ( cd "${srcdir}"/"${_winesrcdir}" && git merge-base --is-ancestor ce91ef6426bf5065bd31bb82fa4f76011e7a9a36 HEAD ); then
+	  _processinfoclass="true"
+	fi
+
 	echo -e "" >> "$_where"/last_build_config.log
 	_commitmsg="04-post-staging" _committer
 }
@@ -1023,7 +1028,13 @@ _polish() {
 
 	echo "" >> "$_where"/last_build_config.log
 
-    source "$_where"/wine-tkg-patches/misc/wine-tkg/wine-tkg
+	source "$_where"/wine-tkg-patches/misc/wine-tkg/wine-tkg
+
+	# tools/make_makefiles destroys Valve trees - disable on those
+	if [[ "$_custom_wine_source" != *"ValveSoftware"* ]]; then
+	  git add * && true
+	  tools/make_makefiles
+	fi
 
 	echo -e "\nRunning make_vulkan" >> "$_where"/prepare.log && dlls/winevulkan/make_vulkan >> "$_where"/prepare.log 2>&1
 	tools/make_requests
@@ -1112,9 +1123,6 @@ _polish() {
 	    sed -i "s|-lldap_r|-lldap|" "$srcdir/$_winesrcdir/configure"
 	  fi
 	fi
-
-	# fix path of opencl headers
-	sed 's|OpenCL/opencl.h|CL/opencl.h|g' -i configure*
 
 	_commitmsg="07-tags-n-polish" _committer
 
