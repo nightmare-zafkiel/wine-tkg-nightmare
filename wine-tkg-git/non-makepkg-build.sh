@@ -85,9 +85,15 @@ pkgver() {
       fi
       _debuntu_64
     elif [ "$_nomakepkg_dep_resolution_distro" = "fedora" ]; then
-      _fedora_6432
+      _fedora_64
+      if [ "$_NOLIB32" != "true" ]; then
+        _fedora_32
+      fi
     elif [ "$_nomakepkg_dep_resolution_distro" = "archlinux" ]; then
-      _archlinux_6432
+      _archlinux_64
+      if [ "$_NOLIB32" != "true" ]; then
+        _archlinux_32
+      fi
     fi
   fi
 
@@ -255,7 +261,10 @@ build_wine_tkg() {
     local _prefix="${_nomakepkg_prefix_path}/${_nomakepkg_pkgname}"
   fi
 
-  if [ -e /lib ] && [ -e /lib64 ] && [ -d /usr/lib ] && [ -d /usr/lib32 ] && [ "$_EXTERNAL_INSTALL" != "proton" ]; then
+  if [ "$_NOLIB32" = "true" ]; then
+    local _lib32name="lib"
+    local _lib64name="lib"
+  elif [ -e /lib ] && [ -e /lib64 ] && [ -d /usr/lib ] && [ -d /usr/lib32 ] && [ "$_EXTERNAL_INSTALL" != "proton" ]; then
     local _lib32name="lib32"
     local _lib64name="lib"
   else
