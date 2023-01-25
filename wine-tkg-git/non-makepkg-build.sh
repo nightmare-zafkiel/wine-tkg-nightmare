@@ -20,6 +20,8 @@
 
 pkgname=wine-tkg-nightmare
 
+# I love English
+export LC_ALL=C
 _build_in_tmpfs="true"
 
 _esyncsrcdir='esync'
