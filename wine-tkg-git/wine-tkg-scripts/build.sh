@@ -384,15 +384,15 @@ _package_makepkg() {
 	  if [ "$_protonify" = "true" ] && ( cd "${srcdir}"/"${_winesrcdir}" && ! git merge-base --is-ancestor 2e5e5ade82b5e3b1d70ebe6b1a824bdfdedfd04e HEAD ); then
 	    if [ "$_pkg_strip" = "true" ]; then
 	      msg2 "Fixing x86_64 PE files..."
-	      find "${pkgdir}$_prefix"/"$_lib64name"/ -type f -not '(' -iname '*.pc' -or -iname '*.cmake' -or -iname '*.a' -or -iname '*.la' -or -iname '*.def' -or -iname '*.py' -or -iname '*.pyc' -or -iname '*.pl' ')' -printf '--strip-unneeded\0%p\0%p\0' | xargs -0 -r -P1 -n3 objcopy --file-alignment=4096 --set-section-flags .text=contents,alloc,load,readonly,code
+	      find "${pkgdir}$_prefix"/"$_lib64name"/ -type f -not '(' -iname '*.pc' -or -iname '*.cmake' -or -iname '*.a' -or -iname '*.la' -or -iname '*.def' -or -iname '*.py' -or -iname '*.pyc' -or -iname '*.pl' -or -iname '*.conf' ')' -printf '--strip-unneeded\0%p\0%p\0' | xargs -0 -r -P1 -n3 objcopy --file-alignment=4096 --set-section-flags .text=contents,alloc,load,readonly,code
 	      msg2 "Fixing i386 PE files..."
-	      find "${pkgdir}$_prefix"/"$_lib32name"/ -type f -not '(' -iname '*.pc' -or -iname '*.cmake' -or -iname '*.a' -or -iname '*.la' -or -iname '*.def' -or -iname '*.py' -or -iname '*.pyc' -or -iname '*.pl' ')' -printf '--strip-unneeded\0%p\0%p\0' | xargs -0 -r -P1 -n3 objcopy --file-alignment=4096 --set-section-flags .text=contents,alloc,load,readonly,code
+	      find "${pkgdir}$_prefix"/"$_lib32name"/ -type f -not '(' -iname '*.pc' -or -iname '*.cmake' -or -iname '*.a' -or -iname '*.la' -or -iname '*.def' -or -iname '*.py' -or -iname '*.pyc' -or -iname '*.pl' -or -iname '*.conf' ')' -printf '--strip-unneeded\0%p\0%p\0' | xargs -0 -r -P1 -n3 objcopy --file-alignment=4096 --set-section-flags .text=contents,alloc,load,readonly,code
 	      find "${pkgdir}$_prefix"/bin/ -type f -not '(' -iname '*.pc' -or -iname '*.cmake' -or -iname '*.a' -or -iname '*.la' -or -iname '*.def' -or -iname '*.py' -or -iname '*.pyc' -or -iname '*.pl' ')' -printf '--strip-unneeded\0%p\0%p\0' | xargs -0 -r -P1 -n3 sh -c 'objcopy --file-alignment=4096 "$@" > /dev/null 2>&1; exit 0' cmd
 	    else
 	      msg2 "Fixing x86_64 PE files..."
-	      find "${pkgdir}$_prefix"/"$_lib64name"/ -type f -not '(' -iname '*.pc' -or -iname '*.cmake' -or -iname '*.a' -or -iname '*.la' -or -iname '*.def' -or -iname '*.py' -or -iname '*.pyc' -or -iname '*.pl' ')' -printf '%p\0%p\0' | xargs -0 -r -P1 -n2 objcopy --file-alignment=4096 --set-section-flags .text=contents,alloc,load,readonly,code
+	      find "${pkgdir}$_prefix"/"$_lib64name"/ -type f -not '(' -iname '*.pc' -or -iname '*.cmake' -or -iname '*.a' -or -iname '*.la' -or -iname '*.def' -or -iname '*.py' -or -iname '*.pyc' -or -iname '*.pl' -or -iname '*.conf' ')' -printf '%p\0%p\0' | xargs -0 -r -P1 -n2 objcopy --file-alignment=4096 --set-section-flags .text=contents,alloc,load,readonly,code
 	      msg2 "Fixing i386 PE files..."
-	      find "${pkgdir}$_prefix"/"$_lib32name"/ -type f -not '(' -iname '*.pc' -or -iname '*.cmake' -or -iname '*.a' -or -iname '*.la' -or -iname '*.def' -or -iname '*.py' -or -iname '*.pyc' -or -iname '*.pl' ')' -printf '%p\0%p\0' | xargs -0 -r -P1 -n2 objcopy --file-alignment=4096 --set-section-flags .text=contents,alloc,load,readonly,code
+	      find "${pkgdir}$_prefix"/"$_lib32name"/ -type f -not '(' -iname '*.pc' -or -iname '*.cmake' -or -iname '*.a' -or -iname '*.la' -or -iname '*.def' -or -iname '*.py' -or -iname '*.pyc' -or -iname '*.pl' -or -iname '*.conf' ')' -printf '%p\0%p\0' | xargs -0 -r -P1 -n2 objcopy --file-alignment=4096 --set-section-flags .text=contents,alloc,load,readonly,code
 	      find "${pkgdir}$_prefix"/bin/ -type f -not '(' -iname '*.pc' -or -iname '*.cmake' -or -iname '*.a' -or -iname '*.la' -or -iname '*.def' -or -iname '*.py' -or -iname '*.pyc' -or -iname '*.pl' ')' -printf '%p\0%p\0' | xargs -0 -r -P1 -n2 sh -c 'objcopy --file-alignment=4096 "$@" > /dev/null 2>&1; exit 0' cmd
 	    fi
 	  elif [ "$_pkg_strip" = "true" ]; then
@@ -426,6 +426,20 @@ _package_makepkg() {
 	    msg2 ''
 	    msg2 '##########################################################################################################################'
 	  fi
+	fi
+
+	if [ "$_use_fastsync" = "true" ]; then
+	  msg2 '##########################################################################################################################'
+	  msg2 ''
+	  msg2 'To disable NTsync, export WINE_DISABLE_FAST_SYNC=1'
+	  if [ "$_use_fsync" = "true" ]; then
+	    msg2 'Any WINEESYNC and WINEFSYNC values will be ignored unless NTsync is disabled via an environment variable'
+	  fi
+	  msg2 ''
+	  msg2 'https://github.com/Frogging-Family/wine-tkg-git/issues/936 - feedback topic for reporting test results'
+	  msg2 "(please do not report issues related to builds or NTsync installation there - it's only for testing results)"
+	  msg2 ''
+	  msg2 '##########################################################################################################################'
 	fi
 
 	# External install

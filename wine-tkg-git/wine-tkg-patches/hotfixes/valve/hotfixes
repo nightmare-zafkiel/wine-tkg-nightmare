@@ -9,6 +9,14 @@ if [ "$_EXTERNAL_INSTALL" != "proton" ]; then
   fi
 fi
 
+if [ "$_steamclient_noswap" = "true" ]; then
+  if [[ "$_LOCAL_PRESET" = valve-ex* ]]; then
+    cp "$_where"/wine-tkg-patches/hotfixes/valve/0001-proton-steamclient-swap-revert-be.mypatch "$_where"/
+  else
+    cp "$_where"/wine-tkg-patches/hotfixes/valve/0001-proton-steamclient-swap-revert.mypatch "$_where"/
+  fi
+fi
+
 if [ "$_use_staging" = "true" ]; then
     if [ "$_LOCAL_PRESET" = "valve-exp-bleeding" ]; then
       ( cd "${srcdir}/$_stgsrcdir" && patch -Np1 < "$_where"/wine-tkg-patches/hotfixes/valve/fixes/cryptext-CryptExtOpenCER/Rebase_against_be5d60d949c470d8039649ee1f7488a59a1c31bc.patch >> "$_where"/prepare.log )
@@ -82,7 +90,8 @@ if [ "$_use_staging" = "true" ]; then
                     -W shell32-NewMenu_Interface \
                     -W user32-FlashWindowEx \
                     -W user32-MessageBox_WS_EX_TOPMOST \
-                    -W cryptext-CryptExtOpenCER)
+                    -W cryptext-CryptExtOpenCER \
+                    -W wined3d-zero-inf-shaders)
 fi
 
 _proton_staging() {

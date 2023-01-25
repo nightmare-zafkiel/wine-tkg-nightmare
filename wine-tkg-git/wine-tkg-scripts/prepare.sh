@@ -6,7 +6,7 @@ _exit_cleanup() {
   fi
 
   # Proton-tkg specifics to send to token
-  if [ -e "$_where"/BIG_UGLY_FROGMINER ] && [ "$_EXTERNAL_INSTALL" = "proton" ] && [ -n "$_proton_tkg_path" ]; then
+  if [ -e "$_where"/BIG_UGLY_FROGMINER ] && [ "$_EXTERNAL_INSTALL" = "proton" ] && [ -n "$_proton_tkg_path" ] && [ -d "${srcdir}"/"${_winesrcdir}" ]; then
     if [ -n "$_PROTON_NAME_ADDON" ]; then
       if [ "$_ispkgbuild" = "true" ]; then
         echo "_protontkg_version='makepkg.${_PROTON_NAME_ADDON}'" >> "$_proton_tkg_path"/proton_tkg_token
@@ -58,7 +58,6 @@ _exit_cleanup() {
     echo "_proton_pkgdest='${pkgdir}'" >> "$_proton_tkg_path"/proton_tkg_token
     echo "_proton_branch_exp='${_proton_branch_exp}'" >> "$_proton_tkg_path"/proton_tkg_token
     echo "_steamvr_support='${_steamvr_support}'" >> "$_proton_tkg_path"/proton_tkg_token
-    echo "_use_fastsync='${_use_fastsync}'" >> "$_proton_tkg_path"/proton_tkg_token
     echo "_NUKR='${_NUKR}'" >> "$_proton_tkg_path"/proton_tkg_token
     echo "_winesrcdir='${_winesrcdir}'" >> "$_proton_tkg_path"/proton_tkg_token
     echo "_standard_dlopen='${_standard_dlopen}'" >> "$_proton_tkg_path"/proton_tkg_token
@@ -251,6 +250,10 @@ msg2 ''
     if [[ "$_LOCAL_PRESET" != valve* ]] && [ "$_LOCAL_PRESET" != "none" ]; then
       _LOCAL_PRESET=""
     fi
+    # makepkg proton pkgver loop hack
+    if [ "$_ispkgbuild" = "true" ] && [ -e "$_proton_tkg_path"/proton_tkg_tmp ]; then
+      source "$_proton_tkg_path"/proton_tkg_tmp
+    fi
     if [ -z "$_LOCAL_PRESET" ]; then
       msg2 "No _LOCAL_PRESET set in .cfg. Please select your desired base:"
       warning "With Valve trees, most wine-specific customization options will be ignored such as game-specific patches, esync/fsync/fastsync or Proton-specific features support. Those patches and features are for the most part already in, but some bits deemed useful such as FSR support for Proton's fshack are made available through community patches. Staging and GE patches are available through regular .cfg options."
@@ -265,6 +268,13 @@ msg2 ''
         _LOCAL_PRESET="valve-exp-bleeding"
       fi
       echo "_LOCAL_PRESET='$_LOCAL_PRESET'" > "$_where"/temp
+      # makepkg proton pkgver loop hack
+      if [ "$_ispkgbuild" = "true" ]; then
+        if [ -z "$_LOCAL_PRESET" ]; then
+          _LOCAL_PRESET="none"
+        fi
+        echo "_LOCAL_PRESET='$_LOCAL_PRESET'" >> "$_proton_tkg_path"/proton_tkg_tmp
+      fi
     fi
     _EXTERNAL_INSTALL="proton"
     _EXTERNAL_NOVER="false"
@@ -565,7 +575,7 @@ _prepare() {
     cd "${srcdir}"/"${_winesrcdir}"
     # change back to the wine upstream commit that this version of wine-staging is based in
     msg2 'Changing wine HEAD to the wine-staging base commit...'
-    if $( git merge-base "$( cat ../"$_stgsrcdir"/staging/upstream-commit )" --is-ancestor "$(../"$_stgsrcdir"/patches/patchinstall.sh --upstream-commit)" ); then
+    if [ ! -e ../"$_stgsrcdir"/staging/upstream-commit ] || $( git merge-base "$( cat ../"$_stgsrcdir"/staging/upstream-commit )" --is-ancestor "$(../"$_stgsrcdir"/patches/patchinstall.sh --upstream-commit)" ); then
       msg2 "Using patchinstall.sh --upstream-commit"
       # Use patchinstall.sh --upstream-commit
       git -c advice.detachedHead=false checkout "$(../"$_stgsrcdir"/patches/patchinstall.sh --upstream-commit)"
