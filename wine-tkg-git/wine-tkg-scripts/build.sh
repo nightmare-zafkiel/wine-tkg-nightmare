@@ -161,6 +161,16 @@ _build() {
   else
     _build_serial
   fi
+  if [ "$_nvml" = "true" ]; then
+	# Fix meson "Unable to detect linker for compiler" error
+	unset CFLAGS
+	unset LDFLAGS
+	unset CXXFLAGS
+	unset CROSSCFLAGS
+	unset CROSSLDFLAGS
+	cd "$_where/src/wine-nvml"
+	./build.sh
+  fi
 }
 
 _generate_debian_package() {
@@ -237,6 +247,14 @@ _package_nomakepkg() {
 	cp -v "$_where"/wine-tkg-scripts/wine-tkg "$_prefix"/bin/wine-tkg
 	cp -v "$_where"/wine-tkg-scripts/wine64-tkg "$_prefix"/bin/wine64-tkg
 	cp -v "$_where"/wine-tkg-scripts/wine-tkg-interactive "$_prefix"/bin/wine-tkg-interactive
+
+	if [ "$_nvml" = "true" ]; then
+		msg2 "Packaging Wine-NVML..."
+	    cp -v "$_where"/src/wine-nvml/build-wine64/src/nvml.so "$_prefix"/lib/wine/x86_64-unix/nvml.so
+	    cp -v "$_where"/src/wine-nvml/build-mingw64/src/nvml.dll "$_prefix"/lib/wine/x86_64-windows/nvml.dll
+	    cp -v "$_where"/src/wine-nvml/build-wine32/src/nvml.so "$_prefix"/lib32/wine/i386-unix/nvml.so
+	    cp -v "$_where"/src/wine-nvml/build-mingw32/src/nvml.dll "$_prefix"/lib32/wine/i386-windows/nvml.dll
+	fi
 
 	# strip
 	if [ "$_EXTERNAL_INSTALL" != "proton" ]; then

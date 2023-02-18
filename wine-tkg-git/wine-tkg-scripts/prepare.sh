@@ -604,6 +604,14 @@ _prepare() {
     fi
   fi
 
+  if [ "$_nvml" = "true" ]; then
+    msg2 "Cloning Wine-NVML..."
+    if [ -d "$_where/src/wine-nvml" ]; then
+      rm -rf "$_where/src/wine-nvml"
+    fi
+    git clone "https://github.com/Saancreed/wine-nvml" "$_where/src/wine-nvml"
+  fi
+
   # Community patches
   if [[ "$(realpath -Lm . 2>&1)" =~ -Lm ]]; then
     warning "Detected non-GNU realpath (busybox?), please disable community patches in case of issues"
