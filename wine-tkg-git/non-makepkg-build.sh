@@ -18,11 +18,12 @@
 
 ## You're on your own to resolve additional dependencies you might want to build with, such as Faudio.
 
-pkgname=wine-tkg-nightmare
+pkgname=wine-tkg
 
 # I love English
+# export PATH="/data/Storage/Apps/Linux/mingw-w64/llvm-mingw-20220906-ucrt-ubuntu-18.04-x86_64/bin/:$PATH"
 export LC_ALL=C
-_build_in_tmpfs="true"
+_build_in_tmpfs="false"
 
 _esyncsrcdir='esync'
 _where="$PWD" # track basedir as different Arch based distros are moving srcdir around
@@ -50,7 +51,7 @@ warning() {
 
 pkgver() {
   if [ -d "${srcdir}/${_winesrcdir}" ]; then
-	if [ "$_use_staging" = "true" ] && [ -d "${srcdir}/${_stgsrcdir}" ] && [[ "$_custom_wine_source" != *"ValveSoftware"* ]]; then
+	if [ "$_use_staging" = "true" ] && [ -d "${srcdir}/${_stgsrcdir}" ] && [[ "$_custom_wine_source" != *"ValveSoftware"* ]] && [ -z "$_plain_version" ]; then
 	  cd "${srcdir}/${_stgsrcdir}"
 	else
 	  cd "${srcdir}/${_winesrcdir}"
@@ -74,6 +75,12 @@ pkgver() {
 
 # init step
   _init
+
+  # set custom MinGW to PATH
+  if [ -d "$CUSTOM_MINGW_PATH" ]; then
+      msg2 "Using custom MinGW: $CUSTOM_MINGW_PATH"
+      export PATH="$CUSTOM_MINGW_PATH/bin:$PATH"
+  fi
 
   # deps
   if [ -n "$_nomakepkg_dep_resolution_distro" ]; then
@@ -285,7 +292,7 @@ build_wine_tkg() {
     if [ "$_EXTERNAL_NOVER" = "true" ]; then
       _prefix="$_DEFAULT_EXTERNAL_PATH/$pkgname"
     else
-      if [ "$_use_staging" = "true" ]; then
+      if [ "$_use_staging" = "true" ] && [ -z "$_plain_version" ]; then
         cd "$srcdir/$_stgsrcdir"
       else
         cd "$srcdir/$_winesrcdir"
@@ -299,6 +306,7 @@ build_wine_tkg() {
   fi
 
   if [ "$_SKIPBUILDING" != "true" ] && [ "$_NOCOMPILE" != "true" ]; then
+    msg2 "PATH: $PATH"
     _build
   fi
 

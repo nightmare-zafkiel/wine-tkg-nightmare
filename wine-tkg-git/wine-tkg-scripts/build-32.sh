@@ -53,10 +53,10 @@ _build_32() {
   elif [ "$_LOCAL_OPTIMIZED" = 'true' ]; then
     # make using all available threads
     if [ "$_log_errors_to_file" = "true" ]; then
-      make -j$(nproc) 2> "$_where/debug.log"
+      make -j8 2> "$_where/debug.log"
     else
       #_buildtime32=$( time ( make -j$(nproc) 2>&1 ) 3>&1 1>&2 2>&3 ) - Bash 5.2 is frogged - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1018727
-      make -j$(nproc)
+      make -j8
     fi
   else
     # make using makepkg settings

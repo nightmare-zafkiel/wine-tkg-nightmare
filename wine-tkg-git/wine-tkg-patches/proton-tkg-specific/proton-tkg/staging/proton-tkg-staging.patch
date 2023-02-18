@@ -1543,42 +1543,42 @@ index 00000000000..cd6df5bcf41
 +    FIXME("stub!");
 +    return 0;
 +}
-From 8a0f4add2096d213999d9be7a04229d288f1af75 Mon Sep 17 00:00:00 2001
-From: Andrew Eikum <aeikum@codeweavers.com>
-Date: Fri, 24 Aug 2018 14:41:44 -0500
-Subject: [PATCH] HACK: winex11: Grab mouse in fullscreen windows by default
+# From 8a0f4add2096d213999d9be7a04229d288f1af75 Mon Sep 17 00:00:00 2001
+# From: Andrew Eikum <aeikum@codeweavers.com>
+# Date: Fri, 24 Aug 2018 14:41:44 -0500
+# Subject: [PATCH] HACK: winex11: Grab mouse in fullscreen windows by default
 
----
- dlls/winex11.drv/x11drv_main.c | 2 +-
- programs/winecfg/x11drvdlg.c   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+# ---
+#  dlls/winex11.drv/x11drv_main.c | 2 +-
+#  programs/winecfg/x11drvdlg.c   | 2 +-
+#  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/dlls/winex11.drv/x11drv_main.c b/dlls/winex11.drv/x11drv_main.c
-index af2094a96f0..9c98209d43d 100644
---- a/dlls/winex11.drv/x11drv_main.c
-+++ b/dlls/winex11.drv/x11drv_main.c
-@@ -76,7 +76,7 @@ BOOL use_primary_selection = FALSE;
- BOOL use_system_cursors = TRUE;
- BOOL show_systray = TRUE;
- BOOL grab_pointer = TRUE;
--BOOL grab_fullscreen = FALSE;
-+BOOL grab_fullscreen = TRUE;
- BOOL managed_mode = TRUE;
- BOOL decorated_mode = TRUE;
- BOOL private_color_map = FALSE;
-diff --git a/programs/winecfg/x11drvdlg.c b/programs/winecfg/x11drvdlg.c
-index fbc6716e94e..1ca8c3ed0fd 100644
---- a/programs/winecfg/x11drvdlg.c
-+++ b/programs/winecfg/x11drvdlg.c
-@@ -123,7 +123,7 @@ static void init_dialog(HWND dialog)
-     SendDlgItemMessageW(dialog, IDC_DESKTOP_WIDTH, EM_LIMITTEXT, RES_MAXLEN, 0);
-     SendDlgItemMessageW(dialog, IDC_DESKTOP_HEIGHT, EM_LIMITTEXT, RES_MAXLEN, 0);
+# diff --git a/dlls/winex11.drv/x11drv_main.c b/dlls/winex11.drv/x11drv_main.c
+# index af2094a96f0..9c98209d43d 100644
+# --- a/dlls/winex11.drv/x11drv_main.c
+# +++ b/dlls/winex11.drv/x11drv_main.c
+# @@ -76,7 +76,7 @@ BOOL use_primary_selection = FALSE;
+#  BOOL use_system_cursors = TRUE;
+#  BOOL show_systray = TRUE;
+#  BOOL grab_pointer = TRUE;
+# -BOOL grab_fullscreen = FALSE;
+# +BOOL grab_fullscreen = TRUE;
+#  BOOL managed_mode = TRUE;
+#  BOOL decorated_mode = TRUE;
+#  BOOL private_color_map = FALSE;
+# diff --git a/programs/winecfg/x11drvdlg.c b/programs/winecfg/x11drvdlg.c
+# index fbc6716e94e..1ca8c3ed0fd 100644
+# --- a/programs/winecfg/x11drvdlg.c
+# +++ b/programs/winecfg/x11drvdlg.c
+# @@ -123,7 +123,7 @@ static void init_dialog(HWND dialog)
+#      SendDlgItemMessageW(dialog, IDC_DESKTOP_WIDTH, EM_LIMITTEXT, RES_MAXLEN, 0);
+#      SendDlgItemMessageW(dialog, IDC_DESKTOP_HEIGHT, EM_LIMITTEXT, RES_MAXLEN, 0);
  
--    buf = get_reg_key(config_key, keypath(L"X11 Driver"), L"GrabFullscreen", L"N");
-+    buf = get_reg_key(config_key, keypath(L"X11 Driver"), L"GrabFullscreen", L"Y");
-     if (IS_OPTION_TRUE(*buf))
- 	CheckDlgButton(dialog, IDC_FULLSCREEN_GRAB, BST_CHECKED);
-     else
+# -    buf = get_reg_key(config_key, keypath(L"X11 Driver"), L"GrabFullscreen", L"N");
+# +    buf = get_reg_key(config_key, keypath(L"X11 Driver"), L"GrabFullscreen", L"Y");
+#      if (IS_OPTION_TRUE(*buf))
+#  	CheckDlgButton(dialog, IDC_FULLSCREEN_GRAB, BST_CHECKED);
+#      else
 From 2452b57e7fed9ac5036df9bcace5c28366a8eb41 Mon Sep 17 00:00:00 2001
 From: Andrew Eikum <aeikum@codeweavers.com>
 Date: Fri, 8 Jan 2021 13:47:39 -0600
@@ -3432,290 +3432,290 @@ index cbc53e22ac1..60b03c57137 100644
  }
 
 
-From cdbb70dee8f9db1c983bf7dbc659fc4b77249f9f Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?R=C3=A9mi=20Bernon?= <rbernon@codeweavers.com>
-Date: Fri, 4 Jun 2021 10:24:10 +0200
-Subject: [PATCH] wineboot: Compute and write the TSC frequency to registry
- ~Mhz.
+# From cdbb70dee8f9db1c983bf7dbc659fc4b77249f9f Mon Sep 17 00:00:00 2001
+# From: =?UTF-8?q?R=C3=A9mi=20Bernon?= <rbernon@codeweavers.com>
+# Date: Fri, 4 Jun 2021 10:24:10 +0200
+# Subject: [PATCH] wineboot: Compute and write the TSC frequency to registry
+#  ~Mhz.
 
-In HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor
+# In HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor
 
-Squashed with patches from:
+# Squashed with patches from:
 
-* Arkadiusz Hiler <ahiler@codeweavers.com>
+# * Arkadiusz Hiler <ahiler@codeweavers.com>
 
-Check if the kernel trusts TSC before using it for Qpc.
+# Check if the kernel trusts TSC before using it for Qpc.
 
-Even if the bits are claiming that TSC meets our requirements the
-hardware implementation may still be broken.
+# Even if the bits are claiming that TSC meets our requirements the
+# hardware implementation may still be broken.
 
-The Linux kernel does a lot of quality testing before deciding to use as
-the clock source. If it (or the user, through an override) does not trust
-the TSC we should not trust it either.
+# The Linux kernel does a lot of quality testing before deciding to use as
+# the clock source. If it (or the user, through an override) does not trust
+# the TSC we should not trust it either.
 
-* Joshua Ashton <joshua@froggi.es>
+# * Joshua Ashton <joshua@froggi.es>
 
-Some games such as Horizon Zero Dawn use this registry value to
-correlate values from rtdsc to real time.
+# Some games such as Horizon Zero Dawn use this registry value to
+# correlate values from rtdsc to real time.
 
-Testing across a few devices, is seems like Windows always returns the
-TSC frequency in this entry, not the current/maximum frequency of the
-processor.
+# Testing across a few devices, is seems like Windows always returns the
+# TSC frequency in this entry, not the current/maximum frequency of the
+# processor.
 
-Returning the nominal/maximum cpu frequency here causes the game to run
-in slow motion as it may not match the tsc frequency of the processor.
+# Returning the nominal/maximum cpu frequency here causes the game to run
+# in slow motion as it may not match the tsc frequency of the processor.
 
-Ideally we'd not have to measure this and the kernel would return
-tsc_khz to userspace, but this is a good enough stop-gap until
-https://lkml.org/lkml/2020/12/31/72 or something similar is merged.
+# Ideally we'd not have to measure this and the kernel would return
+# tsc_khz to userspace, but this is a good enough stop-gap until
+# https://lkml.org/lkml/2020/12/31/72 or something similar is merged.
 
-CW-Bug-Id: #18918
-CW-Bug-Id: #18958
----
- programs/wineboot/wineboot.c | 175 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 170 insertions(+), 5 deletions(-)
+# CW-Bug-Id: #18918
+# CW-Bug-Id: #18958
+# ---
+#  programs/wineboot/wineboot.c | 175 ++++++++++++++++++++++++++++++++++-
+#  1 file changed, 170 insertions(+), 5 deletions(-)
 
-diff --git a/programs/wineboot/wineboot.c b/programs/wineboot/wineboot.c
-index db7baff269f..12881ab9697 100644
---- a/programs/wineboot/wineboot.c
-+++ b/programs/wineboot/wineboot.c
-@@ -82,6 +82,8 @@
+# diff --git a/programs/wineboot/wineboot.c b/programs/wineboot/wineboot.c
+# index db7baff269f..12881ab9697 100644
+# --- a/programs/wineboot/wineboot.c
+# +++ b/programs/wineboot/wineboot.c
+# @@ -82,6 +82,8 @@
 
- WINE_DEFAULT_DEBUG_CHANNEL(wineboot);
+#  WINE_DEFAULT_DEBUG_CHANNEL(wineboot);
 
-+#define TICKSPERSEC        10000000
-+
- extern BOOL shutdown_close_windows( BOOL force );
- extern BOOL shutdown_all_desktops( BOOL force );
- extern void kill_processes( BOOL kill_desktop );
-@@ -241,15 +243,173 @@ static void initialize_xstate_features(struct _KUSER_SHARED_DATA *data)
-     TRACE("XSAVE feature 2 %#x, %#x, %#x, %#x.\n", regs[0], regs[1], regs[2], regs[3]);
- }
+# +#define TICKSPERSEC        10000000
+# +
+#  extern BOOL shutdown_close_windows( BOOL force );
+#  extern BOOL shutdown_all_desktops( BOOL force );
+#  extern void kill_processes( BOOL kill_desktop );
+# @@ -241,15 +243,173 @@ static void initialize_xstate_features(struct _KUSER_SHARED_DATA *data)
+#      TRACE("XSAVE feature 2 %#x, %#x, %#x, %#x.\n", regs[0], regs[1], regs[2], regs[3]);
+#  }
 
-+static UINT64 read_tsc_frequency( BOOL has_rdtscp )
-+{
-+    UINT64 freq = 0;
-+
-+/* FIXME: Intel provides TSC freq in some CPUID but it's been slightly broken,
-+   fix it properly and test it on real Intel hardware */
-+
-+#if 0
-+    int regs[4], cpuid_level, tmp;
-+    UINT64 denom, numer;
-+
-+    __cpuid( regs, 0 );
-+    tmp = regs[2];
-+    regs[2] = regs[3];
-+    regs[3] = tmp;
-+
-+    /* only available on some intel CPUs */
-+    if (memcmp( regs + 1, "GenuineIntel", 12 )) freq = 0;
-+    else if ((cpuid_level = regs[0]) < 0x15) freq = 0;
-+    else
-+    {
-+        __cpuid( regs, 0x15 );
-+        if (!(denom = regs[0]) || !(numer = regs[1])) freq = 0;
-+        else
-+        {
-+            if ((freq = regs[2])) freq = freq * numer / denom;
-+            else if (cpuid_level >= 0x16)
-+            {
-+                __cpuid( regs, 0x16 ); /* eax is base freq in MHz */
-+                freq = regs[0] * (UINT64)1000000;
-+            }
-+            else freq = 0;
-+        }
-+
-+        if (!freq) WARN( "Failed to read TSC frequency from CPUID, falling back to calibration.\n" );
-+        else TRACE( "TSC frequency read from CPUID, found %I64u Hz\n", freq );
-+    }
-+#endif
-+
-+    if (freq == 0)
-+    {
-+        LONGLONG time0, time1, tsc0, tsc1, tsc2, tsc3, freq0, freq1, error;
-+        unsigned int aux;
-+        UINT retries = 50;
-+        int regs[4];
-+
-+        do
-+        {
-+            if (has_rdtscp)
-+            {
-+                tsc0 = __rdtscp( &aux );
-+                time0 = RtlGetSystemTimePrecise();
-+                tsc1 = __rdtscp( &aux );
-+                Sleep( 1 );
-+                tsc2 = __rdtscp( &aux );
-+                time1 = RtlGetSystemTimePrecise();
-+                tsc3 = __rdtscp( &aux );
-+            }
-+            else
-+            {
-+                tsc0 = __rdtsc(); __cpuid( regs, 0 );
-+                time0 = RtlGetSystemTimePrecise();
-+                tsc1 = __rdtsc(); __cpuid( regs, 0 );
-+                Sleep(1);
-+                tsc2 = __rdtsc(); __cpuid( regs, 0 );
-+                time1 = RtlGetSystemTimePrecise();
-+                tsc3 = __rdtsc(); __cpuid( regs, 0 );
-+            }
-+
-+            freq0 = (tsc2 - tsc0) * 10000000 / (time1 - time0);
-+            freq1 = (tsc3 - tsc1) * 10000000 / (time1 - time0);
-+            error = llabs( (freq1 - freq0) * 1000000 / min( freq1, freq0 ) );
-+        }
-+        while (error > 100 && --retries);
-+
-+        if (!retries) WARN( "TSC frequency calibration failed, unstable TSC?\n" );
-+        else
-+        {
-+            freq = (freq0 + freq1) / 2;
-+            TRACE( "TSC frequency calibration complete, found %I64u Hz\n", freq );
-+        }
-+    }
-+
-+    return freq;
-+}
-+
-+static BOOL is_tsc_trusted_by_the_kernel(void)
-+{
-+    char buf[4] = {};
-+    DWORD num_read;
-+    HANDLE handle;
-+    BOOL ret = TRUE;
-+
-+    handle = CreateFileA( "\\??\\unix\\sys\\bus\\clocksource\\devices\\clocksource0\\current_clocksource",
-+                          GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, 0 );
-+    if (handle == INVALID_HANDLE_VALUE) return TRUE;
-+
-+    if (ReadFile( handle, buf, sizeof(buf) - 1, &num_read, NULL ) && strcmp( "tsc", buf ))
-+        ret = FALSE;
-+
-+    CloseHandle( handle );
-+    return ret;
-+}
-+
-+static void initialize_qpc_features( struct _KUSER_SHARED_DATA *data, UINT64 *tsc_frequency )
-+{
-+    BOOL has_rdtscp = FALSE;
-+    int regs[4];
-+
-+    data->QpcBypassEnabled = 0;
-+    data->QpcFrequency = TICKSPERSEC;
-+    data->QpcShift = 0;
-+    data->QpcBias = 0;
-+    *tsc_frequency = 0;
-+
-+    if (!is_tsc_trusted_by_the_kernel())
-+    {
-+        WARN( "Failed to compute TSC frequency, not trusted by the kernel.\n" );
-+        return;
-+    }
-+
-+    if (!data->ProcessorFeatures[PF_RDTSC_INSTRUCTION_AVAILABLE])
-+    {
-+        WARN( "Failed to compute TSC frequency, RDTSC instruction not supported.\n" );
-+        return;
-+    }
-+
-+    __cpuid( regs, 0x80000000 );
-+    if (regs[0] < 0x80000007)
-+    {
-+        WARN( "Failed to compute TSC frequency, unable to check invariant TSC.\n" );
-+        return;
-+    }
-+
-+    /* check for invariant tsc bit */
-+    __cpuid( regs, 0x80000007 );
-+    if (!(regs[3] & (1 << 8)))
-+    {
-+        WARN( "Failed to compute TSC frequency, no invariant TSC.\n" );
-+        return;
-+    }
-+
-+    /* check for rdtscp support bit */
-+    __cpuid( regs, 0x80000001 );
-+    if ((regs[3] & (1 << 27))) has_rdtscp = TRUE;
-+
-+    *tsc_frequency = read_tsc_frequency( has_rdtscp );
-+}
-+
- #else
+# +static UINT64 read_tsc_frequency( BOOL has_rdtscp )
+# +{
+# +    UINT64 freq = 0;
+# +
+# +/* FIXME: Intel provides TSC freq in some CPUID but it's been slightly broken,
+# +   fix it properly and test it on real Intel hardware */
+# +
+# +#if 0
+# +    int regs[4], cpuid_level, tmp;
+# +    UINT64 denom, numer;
+# +
+# +    __cpuid( regs, 0 );
+# +    tmp = regs[2];
+# +    regs[2] = regs[3];
+# +    regs[3] = tmp;
+# +
+# +    /* only available on some intel CPUs */
+# +    if (memcmp( regs + 1, "GenuineIntel", 12 )) freq = 0;
+# +    else if ((cpuid_level = regs[0]) < 0x15) freq = 0;
+# +    else
+# +    {
+# +        __cpuid( regs, 0x15 );
+# +        if (!(denom = regs[0]) || !(numer = regs[1])) freq = 0;
+# +        else
+# +        {
+# +            if ((freq = regs[2])) freq = freq * numer / denom;
+# +            else if (cpuid_level >= 0x16)
+# +            {
+# +                __cpuid( regs, 0x16 ); /* eax is base freq in MHz */
+# +                freq = regs[0] * (UINT64)1000000;
+# +            }
+# +            else freq = 0;
+# +        }
+# +
+# +        if (!freq) WARN( "Failed to read TSC frequency from CPUID, falling back to calibration.\n" );
+# +        else TRACE( "TSC frequency read from CPUID, found %I64u Hz\n", freq );
+# +    }
+# +#endif
+# +
+# +    if (freq == 0)
+# +    {
+# +        LONGLONG time0, time1, tsc0, tsc1, tsc2, tsc3, freq0, freq1, error;
+# +        unsigned int aux;
+# +        UINT retries = 50;
+# +        int regs[4];
+# +
+# +        do
+# +        {
+# +            if (has_rdtscp)
+# +            {
+# +                tsc0 = __rdtscp( &aux );
+# +                time0 = RtlGetSystemTimePrecise();
+# +                tsc1 = __rdtscp( &aux );
+# +                Sleep( 1 );
+# +                tsc2 = __rdtscp( &aux );
+# +                time1 = RtlGetSystemTimePrecise();
+# +                tsc3 = __rdtscp( &aux );
+# +            }
+# +            else
+# +            {
+# +                tsc0 = __rdtsc(); __cpuid( regs, 0 );
+# +                time0 = RtlGetSystemTimePrecise();
+# +                tsc1 = __rdtsc(); __cpuid( regs, 0 );
+# +                Sleep(1);
+# +                tsc2 = __rdtsc(); __cpuid( regs, 0 );
+# +                time1 = RtlGetSystemTimePrecise();
+# +                tsc3 = __rdtsc(); __cpuid( regs, 0 );
+# +            }
+# +
+# +            freq0 = (tsc2 - tsc0) * 10000000 / (time1 - time0);
+# +            freq1 = (tsc3 - tsc1) * 10000000 / (time1 - time0);
+# +            error = llabs( (freq1 - freq0) * 1000000 / min( freq1, freq0 ) );
+# +        }
+# +        while (error > 100 && --retries);
+# +
+# +        if (!retries) WARN( "TSC frequency calibration failed, unstable TSC?\n" );
+# +        else
+# +        {
+# +            freq = (freq0 + freq1) / 2;
+# +            TRACE( "TSC frequency calibration complete, found %I64u Hz\n", freq );
+# +        }
+# +    }
+# +
+# +    return freq;
+# +}
+# +
+# +static BOOL is_tsc_trusted_by_the_kernel(void)
+# +{
+# +    char buf[4] = {};
+# +    DWORD num_read;
+# +    HANDLE handle;
+# +    BOOL ret = TRUE;
+# +
+# +    handle = CreateFileA( "\\??\\unix\\sys\\bus\\clocksource\\devices\\clocksource0\\current_clocksource",
+# +                          GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, 0 );
+# +    if (handle == INVALID_HANDLE_VALUE) return TRUE;
+# +
+# +    if (ReadFile( handle, buf, sizeof(buf) - 1, &num_read, NULL ) && strcmp( "tsc", buf ))
+# +        ret = FALSE;
+# +
+# +    CloseHandle( handle );
+# +    return ret;
+# +}
+# +
+# +static void initialize_qpc_features( struct _KUSER_SHARED_DATA *data, UINT64 *tsc_frequency )
+# +{
+# +    BOOL has_rdtscp = FALSE;
+# +    int regs[4];
+# +
+# +    data->QpcBypassEnabled = 0;
+# +    data->QpcFrequency = TICKSPERSEC;
+# +    data->QpcShift = 0;
+# +    data->QpcBias = 0;
+# +    *tsc_frequency = 0;
+# +
+# +    if (!is_tsc_trusted_by_the_kernel())
+# +    {
+# +        WARN( "Failed to compute TSC frequency, not trusted by the kernel.\n" );
+# +        return;
+# +    }
+# +
+# +    if (!data->ProcessorFeatures[PF_RDTSC_INSTRUCTION_AVAILABLE])
+# +    {
+# +        WARN( "Failed to compute TSC frequency, RDTSC instruction not supported.\n" );
+# +        return;
+# +    }
+# +
+# +    __cpuid( regs, 0x80000000 );
+# +    if (regs[0] < 0x80000007)
+# +    {
+# +        WARN( "Failed to compute TSC frequency, unable to check invariant TSC.\n" );
+# +        return;
+# +    }
+# +
+# +    /* check for invariant tsc bit */
+# +    __cpuid( regs, 0x80000007 );
+# +    if (!(regs[3] & (1 << 8)))
+# +    {
+# +        WARN( "Failed to compute TSC frequency, no invariant TSC.\n" );
+# +        return;
+# +    }
+# +
+# +    /* check for rdtscp support bit */
+# +    __cpuid( regs, 0x80000001 );
+# +    if ((regs[3] & (1 << 27))) has_rdtscp = TRUE;
+# +
+# +    *tsc_frequency = read_tsc_frequency( has_rdtscp );
+# +}
+# +
+#  #else
 
- static void initialize_xstate_features(struct _KUSER_SHARED_DATA *data)
- {
- }
+#  static void initialize_xstate_features(struct _KUSER_SHARED_DATA *data)
+#  {
+#  }
 
-+static void initialize_qpc_features( struct _KUSER_SHARED_DATA *data, UINT64 *tsc_frequency )
-+{
-+    data->QpcBypassEnabled = 0;
-+    data->QpcFrequency = TICKSPERSEC;
-+    data->QpcShift = 0;
-+    data->QpcBias = 0;
-+    *tsc_frequency = 0;
-+}
-+
- #endif
+# +static void initialize_qpc_features( struct _KUSER_SHARED_DATA *data, UINT64 *tsc_frequency )
+# +{
+# +    data->QpcBypassEnabled = 0;
+# +    data->QpcFrequency = TICKSPERSEC;
+# +    data->QpcShift = 0;
+# +    data->QpcBias = 0;
+# +    *tsc_frequency = 0;
+# +}
+# +
+#  #endif
 
--static void create_user_shared_data(void)
-+static void create_user_shared_data( UINT64 *tsc_frequency )
- {
-     struct _KUSER_SHARED_DATA *data;
-     RTL_OSVERSIONINFOEXW version;
-@@ -336,6 +496,7 @@ static void create_user_shared_data(void)
-     data->ActiveGroupCount = 1;
+# -static void create_user_shared_data(void)
+# +static void create_user_shared_data( UINT64 *tsc_frequency )
+#  {
+#      struct _KUSER_SHARED_DATA *data;
+#      RTL_OSVERSIONINFOEXW version;
+# @@ -336,6 +496,7 @@ static void create_user_shared_data(void)
+#      data->ActiveGroupCount = 1;
 
-     initialize_xstate_features( data );
-+    initialize_qpc_features( data, tsc_frequency );
+#      initialize_xstate_features( data );
+# +    initialize_qpc_features( data, tsc_frequency );
 
-     UnmapViewOfFile( data );
- }
-@@ -647,7 +808,7 @@ static void create_bios_key( HKEY system_key )
- }
+#      UnmapViewOfFile( data );
+#  }
+# @@ -647,7 +808,7 @@ static void create_bios_key( HKEY system_key )
+#  }
 
- /* create the volatile hardware registry keys */
--static void create_hardware_registry_keys(void)
-+static void create_hardware_registry_keys( UINT64 tsc_frequency )
- {
-     unsigned int i;
-     HKEY hkey, system_key, cpu_key, fpu_key;
-@@ -722,12 +883,15 @@ static void create_hardware_registry_keys(void)
-         if (!RegCreateKeyExW( cpu_key, numW, 0, NULL, REG_OPTION_VOLATILE,
-                               KEY_ALL_ACCESS, NULL, &hkey, NULL ))
-         {
-+            DWORD tsc_freq_mhz = (DWORD)(tsc_frequency / 1000000ull); /* Hz -> Mhz */
-+            if (!tsc_freq_mhz) tsc_freq_mhz = power_info[i].MaxMhz;
-+
-             RegSetValueExW( hkey, L"FeatureSet", 0, REG_DWORD, (BYTE *)&sci.ProcessorFeatureBits, sizeof(DWORD) );
-             set_reg_value( hkey, L"Identifier", id );
-             /* TODO: report ARM properly */
-             set_reg_value( hkey, L"ProcessorNameString", namestr );
-             set_reg_value( hkey, L"VendorIdentifier", vendorid );
--            RegSetValueExW( hkey, L"~MHz", 0, REG_DWORD, (BYTE *)&power_info[i].MaxMhz, sizeof(DWORD) );
-+            RegSetValueExW( hkey, L"~MHz", 0, REG_DWORD, (BYTE *)&tsc_freq_mhz, sizeof(DWORD) );
-             RegCloseKey( hkey );
-         }
-         if (sci.Architecture != PROCESSOR_ARCHITECTURE_ARM &&
-@@ -1680,6 +1844,7 @@ int __cdecl main( int argc, char *argv[] )
-     BOOL end_session, force, init, kill, restart, shutdown, update;
-     HANDLE event;
-     OBJECT_ATTRIBUTES attr;
-+    UINT64 tsc_frequency = 0;
-     UNICODE_STRING nameW;
-     BOOL is_wow64;
+#  /* create the volatile hardware registry keys */
+# -static void create_hardware_registry_keys(void)
+# +static void create_hardware_registry_keys( UINT64 tsc_frequency )
+#  {
+#      unsigned int i;
+#      HKEY hkey, system_key, cpu_key, fpu_key;
+# @@ -722,12 +883,15 @@ static void create_hardware_registry_keys(void)
+#          if (!RegCreateKeyExW( cpu_key, numW, 0, NULL, REG_OPTION_VOLATILE,
+#                                KEY_ALL_ACCESS, NULL, &hkey, NULL ))
+#          {
+# +            DWORD tsc_freq_mhz = (DWORD)(tsc_frequency / 1000000ull); /* Hz -> Mhz */
+# +            if (!tsc_freq_mhz) tsc_freq_mhz = power_info[i].MaxMhz;
+# +
+#              RegSetValueExW( hkey, L"FeatureSet", 0, REG_DWORD, (BYTE *)&sci.ProcessorFeatureBits, sizeof(DWORD) );
+#              set_reg_value( hkey, L"Identifier", id );
+#              /* TODO: report ARM properly */
+#              set_reg_value( hkey, L"ProcessorNameString", namestr );
+#              set_reg_value( hkey, L"VendorIdentifier", vendorid );
+# -            RegSetValueExW( hkey, L"~MHz", 0, REG_DWORD, (BYTE *)&power_info[i].MaxMhz, sizeof(DWORD) );
+# +            RegSetValueExW( hkey, L"~MHz", 0, REG_DWORD, (BYTE *)&tsc_freq_mhz, sizeof(DWORD) );
+#              RegCloseKey( hkey );
+#          }
+#          if (sci.Architecture != PROCESSOR_ARCHITECTURE_ARM &&
+# @@ -1680,6 +1844,7 @@ int __cdecl main( int argc, char *argv[] )
+#      BOOL end_session, force, init, kill, restart, shutdown, update;
+#      HANDLE event;
+#      OBJECT_ATTRIBUTES attr;
+# +    UINT64 tsc_frequency = 0;
+#      UNICODE_STRING nameW;
+#      BOOL is_wow64;
 
-@@ -1765,8 +1930,8 @@ int __cdecl main( int argc, char *argv[] )
+# @@ -1765,8 +1930,8 @@ int __cdecl main( int argc, char *argv[] )
 
-     ResetEvent( event );  /* in case this is a restart */
+#      ResetEvent( event );  /* in case this is a restart */
 
--    create_user_shared_data();
--    create_hardware_registry_keys();
-+    create_user_shared_data( &tsc_frequency );
-+    create_hardware_registry_keys( tsc_frequency );
-     create_dynamic_registry_keys();
-     create_environment_registry_keys();
-     create_computer_name_keys();
+# -    create_user_shared_data();
+# -    create_hardware_registry_keys();
+# +    create_user_shared_data( &tsc_frequency );
+# +    create_hardware_registry_keys( tsc_frequency );
+#      create_dynamic_registry_keys();
+#      create_environment_registry_keys();
+#      create_computer_name_keys();
 
 From 3244ba9966c0e7bcd445a65b5c325801f9b77131 Mon Sep 17 00:00:00 2001
 From: Paul Gofman <pgofman@codeweavers.com>

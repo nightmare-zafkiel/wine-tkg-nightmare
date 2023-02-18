@@ -372,17 +372,17 @@ msg2 ''
   fi
 
   # Load legacy options only when a custom commit is set
-  if [ "$_LOCAL_PRESET" != "valve" ] && [[ "$_LOCAL_PRESET" != valve-exp* ]]; then
-    if [ -n "$_plain_version" ] || [ -n "$_staging_version" ]; then
-      if [ -e "$_proton_tkg_path"/proton_tkg_token ]; then
-        msg2 "Loading legacy config file"
-        source "$_proton_tkg_path"/proton-tkg-profiles/legacy/legacy-options.cfg
-      else
-        msg2 "Loading legacy config file"
-        source "$_where"/wine-tkg-profiles/legacy/legacy-options.cfg
-      fi
-    fi
-  fi
+#   if [ "$_LOCAL_PRESET" != "valve" ] && [[ "$_LOCAL_PRESET" != valve-exp* ]]; then
+#     if [ -n "$_plain_version" ] || [ -n "$_staging_version" ]; then
+#       if [ -e "$_proton_tkg_path"/proton_tkg_token ]; then
+#         msg2 "Loading legacy config file"
+#         source "$_proton_tkg_path"/proton-tkg-profiles/legacy/legacy-options.cfg
+#       else
+#         msg2 "Loading legacy config file"
+#         source "$_where"/wine-tkg-profiles/legacy/legacy-options.cfg
+#       fi
+#     fi
+#   fi
 
   # Disable undesirable patchsets when using official proton wine source
   if [[ "$_custom_wine_source" = *"ValveSoftware"* ]]; then
@@ -596,7 +596,11 @@ _prepare() {
     else
       msg2 "Using upstream-commit file"
       # Use upstream-commit file if patchinstall.sh --upstream-commit doesn't report the same upstream commit target
-      git -c advice.detachedHead=false checkout "$( cat ../"$_stgsrcdir"/staging/upstream-commit )"
+      if [ -z "$_plain_version" ]; then
+        git -c advice.detachedHead=false checkout "$( cat ../"$_stgsrcdir"/staging/upstream-commit )"
+      else
+        git -c advice.detachedHead=false checkout "$_plain_version"
+      fi
     fi
   fi
 

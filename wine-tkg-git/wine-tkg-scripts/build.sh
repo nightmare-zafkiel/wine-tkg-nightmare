@@ -97,10 +97,10 @@ _build_single_make() (
   if [ "$_LOCAL_OPTIMIZED" = 'true' ]; then
     # make using all available threads
     if [ "$_log_errors_to_file" = "true" ]; then
-      make -f "$_where"/wine-tkg-scripts/Makefile.single -j$(nproc) 2> "$_where/debug.log"
+      make -f "$_where"/wine-tkg-scripts/Makefile.single -j8 2> "$_where/debug.log"
     else
       #_buildtime64=$( time ( make --jobserver-style=fifo -f "$_where"/wine-tkg-scripts/Makefile.single -j$(nproc) 2>&1 ) 3>&1 1>&2 2>&3 ) - Bash 5.2 is frogged - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1018727
-      make -f "$_where"/wine-tkg-scripts/Makefile.single -j$(nproc)
+      make -f "$_where"/wine-tkg-scripts/Makefile.single -j8
     fi
   else
     # make using makepkg settings
@@ -199,7 +199,7 @@ _package_nomakepkg() {
 	    _prefix="$_DEFAULT_EXTERNAL_PATH/$pkgname"
 	  else
 	    # $_realwineversion doesn't carry over into the fakeroot environment
-	    if [ "$_use_staging" = "true" ]; then
+	    if [ "$_use_staging" = "true" ] && [ -z "$_plain_version" ]; then
 	      cd "$srcdir/$_stgsrcdir"
 	    else
 	      cd "$srcdir/$_winesrcdir"
@@ -341,7 +341,7 @@ _package_makepkg() {
 	    _prefix="$_DEFAULT_EXTERNAL_PATH/$pkgname"
 	  else
 	    # $_realwineversion doesn't carry over into the fakeroot environment
-	    if [ "$_use_staging" = "true" ]; then
+	    if [ "$_use_staging" = "true" ] && [ -z "$_plain_version" ]; then
 	      cd "$srcdir/$_stgsrcdir"
 	    else
 	      cd "$srcdir/$_winesrcdir"
