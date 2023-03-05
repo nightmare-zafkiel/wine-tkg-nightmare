@@ -1141,6 +1141,7 @@ _polish() {
 	  # Set custom version tags
 	  local _version_tags=()
 	  _version_tags+=(TkG) # watermark to keep track of TkG builds independently of the settings
+    _version_tags+=(Kurumi) # nightmare branding
 	  if [ "$_use_staging" = "true" ]; then
 	    _version_tags+=(Staging)
 	  else
